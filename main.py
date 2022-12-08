@@ -3,15 +3,25 @@ from tkinter import ttk
 from tkinter import *
 import datetime as dt
 from collections import Counter
+import time
 
+numero_pedido = 100
+lista_pratos = ["(1) - Pizza [R$26,90]","(2) - Beirute[R$19,90]","(3) - X-tudo[R$5,50]","(4) - Batata-Frita[R$3,00]","(5) - Coca-Cola 2 Litros[R$8,50]","(6) - Coca-Cola 1 Litro[R$5,25]"]
+lista_precos = [26.90,19.90,5.50,3.0,8.50,5.25]
+formas_pagamento = ['Cartão de Debito',"Cartão de Crédito","Dinheiro","PIX"]
 
-lista_pratos = ["pizza","beirute","x-tudo"]
-caches_produtos = {"pizza": 0,"beirute": 0,"x-tudo":0}
-
+def checar_parametros(txt):
+    if txt == None:
+        return
 
 class clientes:
     def __init__(self, top=None):
-        top.geometry("268x441+383+106")
+        self.caches_produtos = {"Pizza": 0, "Beirute": 0, "X-tudo": 0, "Batata-Frita": 0, "cocacola2": 0, 'cocacola1': 0}
+        self.comanda_ativa = False
+        self.total = 0
+        self.nome = ''
+        self.pagamento = ''
+        top.geometry("368x441+383+106")
         top.minsize(120, 1)
         top.maxsize(1370, 749)
         top.resizable(1,  1)
@@ -24,6 +34,7 @@ class clientes:
 
         self.top = top
         self.combobox = tk.StringVar()
+        self.combobox2 = tk.StringVar()
 
         self.Message1 = tk.Message(self.top)
         self.Message1.place(relx=0.019, rely=0.134, relheight=0.041
@@ -38,7 +49,7 @@ class clientes:
         self.Message1.configure(width=52)
 
         self.Message2 = tk.Message(self.top)
-        self.Message2.place(relx=0.0, rely=0.2, relheight=0.043, relwidth=0.304)
+        self.Message2.place(relx=0.0, rely=0.2, relheight=0.043, relwidth=0.284)
         self.Message2.configure(background="#d9d9d9")
         self.Message2.configure(foreground="#000000")
         self.Message2.configure(highlightbackground="#d9d9d9")
@@ -96,6 +107,19 @@ class clientes:
         self.Message6.configure(pady="1")
         self.Message6.configure(text='''Nº da casa:''')
         self.Message6.configure(width=86)
+
+        self.Message11 = tk.Message(self.top)
+        self.Message11.place(relx=-0.030, rely=0.527, relheight=0.041
+                            , relwidth=0.323)
+        self.Message11.configure(background="#d9d9d9")
+        self.Message11.configure(cursor="fleur")
+        self.Message11.configure(foreground="#000000")
+        self.Message11.configure(highlightbackground="#d9d9d9")
+        self.Message11.configure(highlightcolor="black")
+        self.Message11.configure(padx="1")
+        self.Message11.configure(pady="1")
+        self.Message11.configure(text='''Pagamento:''')
+        self.Message11.configure(width=86)
 
         self.Entry1 = tk.Entry(self.top)
         self.Entry1.place(relx=0.3, rely=0.134, height=20, relwidth=0.599)
@@ -205,14 +229,20 @@ class clientes:
         self.Message7.configure(width=57)
 
         self.TCombobox1 = ttk.Combobox(self.top,values=lista_pratos)
-        self.TCombobox1.place(relx=0.226, rely=0.621, relheight=0.048
-                , relwidth=0.389)
+        self.TCombobox1.place(relx=0.226, rely=0.621, relheight=0.048 ,relwidth=0.560)
         self.combobox.set('Selecione')
         self.TCombobox1.configure(textvariable=self.combobox)
         self.TCombobox1.configure(takefocus="tt")
 
+        self.TCombobox2 = ttk.Combobox(self.top, values=formas_pagamento)
+        self.TCombobox2.place(relx=0.306, rely=0.521, relheight=0.048
+                              , relwidth=0.389)
+        self.combobox2.set('Selecione')
+        self.TCombobox2.configure(textvariable=self.combobox2)
+        self.TCombobox2.configure(takefocus="tt")
+
         self.Button1 = tk.Button(self.top)
-        self.Button1.place(relx=0.634, rely=0.621, height=24, width=27)
+        self.Button1.place(relx=0.787, rely=0.621, height=24, width=27)
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="black")
         self.Button1.configure(background="#d9d9d9")
@@ -227,7 +257,7 @@ class clientes:
         self.Button1.configure(command=self.add)
 
         self.Button2 = tk.Button(self.top)
-        self.Button2.place(relx=0.747, rely=0.621, height=24, width=27)
+        self.Button2.place(relx=0.867, rely=0.621, height=24, width=27)
         self.Button2.configure(activebackground="beige")
         self.Button2.configure(activeforeground="black")
         self.Button2.configure(background="#d9d9d9")
@@ -250,7 +280,7 @@ class clientes:
         self.scrollbar.config(command=self.listbox.yview)
 
         self.Button3 = tk.Button(self.top)
-        self.Button3.place(relx=0.039, rely=0.907, height=34, width=237)
+        self.Button3.place(relx=0.159, rely=0.907, height=34, width=237)
         self.Button3.configure(activebackground="beige")
         self.Button3.configure(activeforeground="black")
         self.Button3.configure(background="#d9d9d9")
@@ -303,7 +333,17 @@ class clientes:
         self.Message10.configure(width=84)
 
     def remover(self):
-        self.listbox.delete(self.listbox.curselection())
+        if self.listbox.curselection():
+            size = self.listbox.size()
+            items = self.listbox.get(0, size)
+            self.listbox.delete(self.listbox.curselection())
+            self.combobox.get()
+            counter = Counter(items)
+            for i in reversed(range(size)):
+                self.listbox.delete(i)
+            self.caches_produtos = {"Pizza": 0, "Beirute": 0, "X-tudo": 0, "Batata-Frita": 0, "cocacola2": 0, 'cocacola1': 0}
+            self.total=0
+
 
     def selecionado(self,event, textnome):
         textnome.delete(0, 'end')
@@ -318,29 +358,141 @@ class clientes:
         n = self.combobox.get()
         size = self.listbox.size()
         items = self.listbox.get(0, size)
-        if n == "Selecione":
+        if not n in lista_pratos:
             return
+
+        #nao esta funcionando corretamente
+        elif self.comanda_ativa == True:
+            print(self.total)
+            self.total = 0
+            self.comanda_ativa=False
+            for i in reversed(range(size)):
+                self.listbox.delete(i)
+            if n == lista_pratos[0]:
+                self.caches_produtos[f'Pizza'] += 1
+                self.total += self.caches_produtos['Pizza']* 26.90
+            elif n == lista_pratos[1]:
+                self.caches_produtos[f'Beirute'] += 1
+                self.total += self.caches_produtos['Beirute'] * 19.90
+            elif n == lista_pratos[2]:
+                self.caches_produtos['X-tudo'] += 1
+                self.total += self.caches_produtos['X-tudo'] * 5.50
+            elif n == lista_pratos[3]:
+                self.caches_produtos[f'Batata-Frita'] += 1
+                self.total += self.caches_produtos['Batata-Frita'] * 3.0
+            elif n == lista_pratos[4]:
+                self.caches_produtos[f'cocacola2'] += 1
+                self.total += self.caches_produtos['cocacola2'] * 8.50
+            elif n == lista_pratos[5]:
+                self.caches_produtos[f'cocacola1'] += 1
+                self.total += self.caches_produtos['cocacola1'] * 5.50
+            for i in self.caches_produtos.keys():
+                quantidade = self.caches_produtos[i]
+                if quantidade >= 1:
+                    msg = i.split("[", 1)[0]
+                    print(quantidade,msg)
+                    self.listbox.insert(0, f'({quantidade}) {msg}'.replace('cocacola2', 'Coca-Cola 2 Litros').replace("cocacola1",'Coca-Cola 1 Litro'))
+
+            print(self.total)
+            self.listbox.insert(0,f'Total: {self.total:.2f}'.replace('.',','))
+
+
+        # print('Foram pedidos: '+f"({quantidade}) - "+i)
+
         else:
-            self.listbox.insert(0, n)
-            caches_produtos[f'{n}'] += 1
+            if n == lista_pratos[0]:
+                self.caches_produtos[f'Pizza'] += 1
+                self.listbox.insert(0, 'Pizza[R$26,90]')
+            elif n == lista_pratos[1]:
+                self.caches_produtos[f'Beirute'] += 1
+                self.listbox.insert(0, 'Beirute[R$19,90]')
+            elif n == lista_pratos[2]:
+                self.caches_produtos['X-tudo'] += 1
+                self.listbox.insert(0, 'X-tudo[R$5,50]')
+            elif n == lista_pratos[3]:
+                self.caches_produtos[f'Batata-Frita'] += 1
+                self.listbox.insert(0, '[R$3,00]')
+            elif n == lista_pratos[4]:
+                self.caches_produtos[f'cocacola2'] += 1
+                self.listbox.insert(0, 'Coca-Cola 2 Litros[R$8,50]')
+            elif n == lista_pratos[5]:
+                self.caches_produtos[f'cocacola1'] += 1
+                self.listbox.insert(0, 'Coca-Cola 1 Litro[R$5,25]')
+
+
 
     def finalizar(self):
+        self.pagamento = self.combobox2.get()
         self.combobox.get()
+        self.nome = self.Entry1.get() + ' ' + self.Entry2.get()
         size = self.listbox.size()
         items = self.listbox.get(0, size)
         counter = Counter(items)
+        messagem = ''
         for i in reversed(range(size)):
             self.listbox.delete(i)
         for i, pairs in enumerate(counter.items()):
             k, v = pairs
             if v > 1:
-                self.listbox.insert(i, f"{k} ({v})")
+                msg = k.split("[", 1)[0]
+                self.listbox.insert(i, f"({v}) - {msg}")
             else:
                 self.listbox.insert(i, k)
-        for i in caches_produtos.keys():
-            quantidade = caches_produtos[i]
+        for i in self.caches_produtos.keys():
+            quantidade = self.caches_produtos[i]
             if quantidade >=1:
-                print('Foram pedidos: '+f"({quantidade})"+i)
+                if i == "Pizza":
+                    soma = quantidade*26.90
+                    self.total += soma
+                elif i == "Beirute":
+                    self.total += quantidade*19.90
+                elif i == "X-tudo":
+                    self.total += quantidade*5.50
+                elif i == "Batata-frita":
+                    self.total +=quantidade*3.00
+                elif i == "Coca-Cola 2 Litros":
+                    self.total +=quantidade*8.50
+                elif i == "Coca-Cola 1 Litro":
+                    self.total +=quantidade*5.25
+
+
+
+                print('Foram pedidos: '+f"({quantidade}) - "+i)
+                #messagem = ''.join(f'({quantidade}) - {i}\n')
+
+        self.listbox.insert(0, f"Total: R${self.total:.2f}".replace('.', ','))
+        self.comanda_ativa=True
+        time.sleep(5)
+
+        #checagem
+        if "Qual" in self.Entry5.get() or 'Qual' in self.Entry3.get() or '*obriga' in self.Entry5.get() or '*obriga' in self.Entry3.get():
+            self.Entry1.delete(0, 'end')
+            self.Entry2.delete(0, 'end')
+            self.Entry3.delete(0, 'end')
+            self.Entry4.delete(0, 'end')
+            self.Entry5.delete(0, 'end')
+            self.Entry6.delete(0, 'end')
+            self.TCombobox1.delete(0, 'end')
+            self.TCombobox2.delete(0,'end')
+            self.listbox.delete(0, 'end')
+        if self.Entry1.get() == "" or self.Entry2.get() == "" or self.Entry3.get() == "" or self.Entry4.get() == "" or self.Entry5.get() == "" or self.Entry6.get() == "" or self.combobox.get() == "" or self.combobox2 == "":
+            self.Button3.configure(background='#d90005')
+            self.Entry1.insert(0, '*obrigatório!')
+            self.Entry1.config(fg='red')
+            self.Entry2.insert(0, '*obrigatório!')
+            self.Entry2.config(fg='red')
+            self.Entry3.insert(0, '*obrigatório!')
+            self.Entry3.config(fg='red')
+            self.Entry4.insert(0, '*obrigatório!')
+            self.Entry4.config(fg='red')
+            self.Entry5.insert(0, '*obrigatório!')
+            self.Entry5.config(fg='red')
+            self.Entry6.insert(0, '*obrigatório!')
+            self.Entry6.config(fg='red')
+            self.TCombobox1.insert(0, '*obrigatório!')
+            self.TCombobox2.insert(0, '*obrigatório!')
+            return
+
         #nova janela
         self.Entry1.destroy()
         self.Entry2.destroy()
@@ -382,7 +534,7 @@ class clientes:
         self.TSeparator1.place(relx=-0.074, rely=0.136, relwidth=1.259)
 
         self.Message2 = tk.Message(self.top)
-        self.Message2.place(relx=0.111, rely=0.181, relheight=0.066
+        self.Message2.place(relx=0.148, rely=0.158, relheight=0.066
                             , relwidth=0.704)
         self.Message2.configure(background="#d9d9d9")
         self.Message2.configure(font="-family {Segoe UI} -size 10 -weight bold")
@@ -391,12 +543,11 @@ class clientes:
         self.Message2.configure(highlightcolor="black")
         self.Message2.configure(padx="1")
         self.Message2.configure(pady="1")
-        self.Message2.configure(text=f'{}')
+        self.Message2.configure(text=f'{self.nome}')
         self.Message2.configure(width=190)
 
         self.Message3 = tk.Message(self.top)
-        self.Message3.place(relx=0.074, rely=0.249, relheight=0.179
-                            , relwidth=0.889)
+        self.Message3.place(relx=0.0, rely=0.339, relheight=0.088, relwidth=1.0)
         self.Message3.configure(background="#d9d9d9")
         self.Message3.configure(font="-family {Segoe UI} -size 13 -weight bold")
         self.Message3.configure(foreground="#213dfa")
@@ -407,13 +558,14 @@ class clientes:
         self.Message3.configure(text='''Seu pedido está a caminho!''')
         self.Message3.configure(width=240)
 
+
         self.TSeparator2 = ttk.Separator(self.top)
         self.TSeparator2.place(relx=-0.037, rely=0.43, relwidth=1.185)
 
         self.Message4 = tk.Message(self.top)
         self.Message4.place(relx=-0.037, rely=0.452, relheight=0.133
                             , relwidth=1.037)
-        self.Message4.configure(background="#cecece")
+        self.Message4.configure(background="#d9d9d9")
         self.Message4.configure(font="-family {Segoe UI} -size 13 -weight bold")
         self.Message4.configure(foreground="#53a40b")
         self.Message4.configure(highlightbackground="#d9d9d9")
@@ -436,7 +588,7 @@ class clientes:
         self.Message5.configure(highlightcolor="black")
         self.Message5.configure(padx="1")
         self.Message5.configure(pady="1")
-        self.Message5.configure(text='''Entre em contato conosco via telefone:''')
+        self.Message5.configure(text='''Entre em contato conosco via telefone.''')
         self.Message5.configure(width=270)
 
         self.Message6 = tk.Message(self.top)
@@ -449,8 +601,34 @@ class clientes:
         self.Message6.configure(highlightcolor="black")
         self.Message6.configure(padx="1")
         self.Message6.configure(pady="1")
-        self.Message6.configure(text='''SAC:''')
+        self.Message6.configure(text='''SAC: (81) 9-84757192''')
         self.Message6.configure(width=230)
+
+        self.Message7 = tk.Message(self.top)
+        self.Message7.place(relx=0.107, rely=0.226, relheight=0.066
+                            , relwidth=0.481)
+        self.Message7.configure(background="#d9d9d9")
+        self.Message7.configure(font="-family {Segoe UI} -size 12 -weight bold")
+        self.Message7.configure(foreground="#000000")
+        self.Message7.configure(highlightbackground="#d9d9d9")
+        self.Message7.configure(highlightcolor="black")
+        self.Message7.configure(padx="1")
+        self.Message7.configure(pady="1")
+        self.Message7.configure(text='''Valor total: 1''')
+        self.Message7.configure(width=130)
+
+        self.Message8 = tk.Message(self.top)
+        self.Message8.place(relx=0.10, rely=0.294, relheight=0.066
+                            , relwidth=0.704)
+        self.Message8.configure(background="#d9d9d9")
+        self.Message8.configure(font="-family {Segoe UI} -size 10 -weight bold")
+        self.Message8.configure(foreground="#000000")
+        self.Message8.configure(highlightbackground="#d9d9d9")
+        self.Message8.configure(highlightcolor="black")
+        self.Message8.configure(padx="1")
+        self.Message8.configure(pady="1")
+        self.Message8.configure(text=f'Forma de pagamento: {self.pagamento}')
+        self.Message8.configure(width=190)
 
 
 def main(*args):
