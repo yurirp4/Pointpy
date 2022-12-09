@@ -1,8 +1,10 @@
 import tkinter as tk
+from datetime import time
 from tkinter import ttk
 from tkinter import *
-import datetime as dt
+from datetime import datetime, timedelta
 import json
+from time import strftime
 
 
 
@@ -21,6 +23,8 @@ class clientes:
         self.telefone = ''
         self.nome = ''
         self.pagamento = ''
+        self.data = ''
+        self.entrega = ''
         self.lista_pratos = ["(1) - Pizza [R$26,90]", "(2) - Beirute[R$19,90]", "(3) - X-tudo[R$5,50]",
                         "(4) - Batata-Frita[R$3,00]", "(5) - Coca-Cola 2 Litros[R$8,50]",
                         "(6) - Coca-Cola 1 Litro[R$5,25]"]
@@ -45,7 +49,8 @@ class clientes:
         self.Message1.place(relx=0.019, rely=0.134, relheight=0.041
                 , relwidth=0.195)
         self.Message1.configure(background="#36393e")
-        self.Message1.configure(foreground="#000000")
+        self.Message1.configure(foreground="#B2BEB5")
+        self.Message1.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
         self.Message1.configure(highlightbackground="#36393e")
         self.Message1.configure(highlightcolor="black")
         self.Message1.configure(padx="1")
@@ -56,7 +61,8 @@ class clientes:
         self.Message2 = tk.Message(self.top)
         self.Message2.place(relx=0.0, rely=0.2, relheight=0.043, relwidth=0.284)
         self.Message2.configure(background="#36393e")
-        self.Message2.configure(foreground="#000000")
+        self.Message2.configure(foreground="#B2BEB5")
+        self.Message2.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
         self.Message2.configure(highlightbackground="#36393e")
         self.Message2.configure(highlightcolor="black")
         self.Message2.configure(padx="1")
@@ -68,8 +74,9 @@ class clientes:
         self.Message3.place(relx=-0.074, rely=0.268, relheight=0.041
                 , relwidth=0.342)
         self.Message3.configure(background="#36393e")
-        self.Message3.configure(foreground="#000000")
+        self.Message3.configure(foreground="#B2BEB5")
         self.Message3.configure(highlightbackground="#36393e")
+        self.Message3.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
         self.Message3.configure(highlightcolor="black")
         self.Message3.configure(padx="1")
         self.Message3.configure(pady="1")
@@ -80,7 +87,8 @@ class clientes:
         self.Message4.place(relx=-0.039, rely=0.333, relheight=0.041
                 , relwidth=0.307)
         self.Message4.configure(background="#36393e")
-        self.Message4.configure(foreground="#000000")
+        self.Message4.configure(foreground="#B2BEB5")
+        self.Message4.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
         self.Message4.configure(highlightbackground="#36393e")
         self.Message4.configure(highlightcolor="black")
         self.Message4.configure(padx="1")
@@ -92,7 +100,8 @@ class clientes:
         self.Message5.place(relx=-0.039, rely=0.399, relheight=0.043
                 , relwidth=0.307)
         self.Message5.configure(background="#36393e")
-        self.Message5.configure(foreground="#000000")
+        self.Message5.configure(foreground="#B2BEB5")
+        self.Message5.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
         self.Message5.configure(highlightbackground="#36393e")
         self.Message5.configure(highlightcolor="black")
         self.Message5.configure(padx="1")
@@ -105,7 +114,8 @@ class clientes:
                 , relwidth=0.323)
         self.Message6.configure(background="#36393e")
         self.Message6.configure(cursor="fleur")
-        self.Message6.configure(foreground="#000000")
+        self.Message6.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
+        self.Message6.configure(foreground="#B2BEB5")
         self.Message6.configure(highlightbackground="#36393e")
         self.Message6.configure(highlightcolor="black")
         self.Message6.configure(padx="1")
@@ -117,8 +127,9 @@ class clientes:
         self.Message11.place(relx=-0.030, rely=0.527, relheight=0.041
                             , relwidth=0.323)
         self.Message11.configure(background="#36393e")
+        self.Message11.configure(font="-family {Segoe UI} -size 10 -weight bold -slant italic")
         self.Message11.configure(cursor="fleur")
-        self.Message11.configure(foreground="#000000")
+        self.Message11.configure(foreground="#B2BEB5")
         self.Message11.configure(highlightbackground="#36393e")
         self.Message11.configure(highlightcolor="black")
         self.Message11.configure(padx="1")
@@ -226,8 +237,8 @@ class clientes:
         self.Message7.place(relx=0.0, rely=0.621, relheight=0.043
                 , relwidth=0.214)
         self.Message7.configure(background="#36393e")
-        self.Message7.configure(font="-family {Segoe UI} -size 12 -slant italic")
-        self.Message7.configure(foreground="#000000")
+        self.Message7.configure(font="-family {Segoe UI} -size 12 -weight bold -slant italic")
+        self.Message7.configure(foreground="#B2BEB5")
         self.Message7.configure(highlightbackground="#36393e")
         self.Message7.configure(highlightcolor="black")
         self.Message7.configure(padx="1")
@@ -331,7 +342,7 @@ class clientes:
                 , relwidth=0.327)
         self.Message10.configure(background="#36393e")
         self.Message10.configure(font="-family {Segoe UI} -size 10 -weight bold")
-        self.Message10.configure(foreground="#000000")
+        self.Message10.configure(foreground="#B2BEB5")
         self.Message10.configure(highlightbackground="#36393e")
         self.Message10.configure(highlightcolor="black")
         self.Message10.configure(padx="1")
@@ -348,8 +359,6 @@ class clientes:
             self.total = 0
             for i in reversed(range(size)):
                 self.listbox.delete(i)
-
-
 
 
     def selecionado(self,event, textnome):
@@ -509,11 +518,18 @@ class clientes:
         if self.Entry4.get() in listnummsg:
             return
         data = self.db_load
+        time_atual = datetime.now()
+        time_atual = time_atual.strftime("%d/%m/%Y - %H:%M:%S")
+        self.data = time_atual
+        prevision = datetime.now() + timedelta(minutes=50)
+        prevision = prevision.strftime("%H:%M")
+        self.entrega=prevision
+
         formart = {'Pedido': data['Pointpy']['Pedidos'] + 1, "Nome": f"{self.Entry1.get()} {self.Entry2.get()}",
                    "Email": f"{self.Entry3.get()}",
                    "Endereco": f'{self.Entry4.get()} - {self.Entry6.get()}',
                    "Telefone": f"{self.Entry5.get()}", 'Total': f'R${self.total:.2f}'.replace('.', ','),
-                   'Forma_de_pagamento:': f'{self.combobox2.get()}',
+                   'Forma_de_pagamento:': f'{self.combobox2.get()}','Feito em': self.data,
                    'pratos': []}
 
         data['Pointpy']['Clientes'].append(formart)
@@ -557,6 +573,7 @@ class clientes:
         self.Button1.destroy()
         self.Button2.destroy()
         self.Button3.destroy()
+
 
         self.Message1 = tk.Message(self.top)
         self.Message1.place(relx=0.037, rely=0.0, relheight=0.111
@@ -624,30 +641,30 @@ class clientes:
         self.TSeparator3.configure(cursor="fleur")
 
         self.Message5 = tk.Message(self.top)
-        self.Message5.place(relx=-0.074, rely=0.611, relheight=0.133
+        self.Message5.place(relx=-0.074, rely=0.701, relheight=0.133
                             , relwidth=1.074)
         self.Message5.configure(background="#36393e")
-        self.Message5.configure(font="-family {Segoe UI} -size 12 -weight bold")
+        self.Message5.configure(font="-family {Segoe UI} -size 10 -weight bold")
         self.Message5.configure(foreground="#B22222")
         self.Message5.configure(highlightbackground="#36393e")
         self.Message5.configure(highlightcolor="black")
         self.Message5.configure(padx="1")
         self.Message5.configure(pady="1")
         self.Message5.configure(text='''Entre em contato conosco via telefone.''')
-        self.Message5.configure(width=270)
+        self.Message5.configure(width=290)
 
         self.Message6 = tk.Message(self.top)
-        self.Message6.place(relx=0.0, rely=0.792, relheight=0.088
-                            , relwidth=0.852)
+        self.Message6.place(relx=-0.037, rely=0.837, relheight=0.066
+                            , relwidth=0.741)
         self.Message6.configure(background="#36393e")
-        self.Message6.configure(font="-family {Segoe UI} -size 12 -weight bold")
-        self.Message6.configure(foreground="#36393e")
-        self.Message6.configure(highlightbackground="#B22222")
+        self.Message6.configure(font="-family {Segoe UI} -size 10 -weight bold")
+        self.Message6.configure(foreground="#B22222")
+        self.Message6.configure(highlightbackground="#36393e")
         self.Message6.configure(highlightcolor="black")
         self.Message6.configure(padx="1")
         self.Message6.configure(pady="1")
-        self.Message6.configure(text=f"SAC: {data['Pointpy']['Telefone']}")
-        self.Message6.configure(width=230)
+        self.Message6.configure(text=f'SAC: {data["Pointpy"]["Telefone"]}')
+        self.Message6.configure(width=200)
 
         self.Message7 = tk.Message(self.top)
         self.Message7.place(relx=0.0, rely=0.204, relheight=0.088
@@ -675,6 +692,18 @@ class clientes:
         self.Message8.configure(text=f'Forma de pagamento: {self.pagamento}')
         self.Message8.configure(width=260)
 
+        self.Message9 = tk.Message(self.top)
+        self.Message9.place(relx=0.0, rely=0.611, relheight=0.066
+                            , relwidth=0.963)
+        self.Message9.configure(background="#36393e")
+        self.Message9.configure(font="-family {Segoe UI} -size 11 -weight bold -slant italic")
+        self.Message9.configure(foreground="#B2BEB5")
+        self.Message9.configure(highlightbackground="#36393e")
+        self.Message9.configure(highlightcolor="black")
+        self.Message9.configure(padx="1")
+        self.Message9.configure(pady="1")
+        self.Message9.configure(text=f'Seu pedido chegará ás {self.entrega}')
+        self.Message9.configure(width=260)
 
         self.Message10 = tk.Message(self.top)
         self.Message10.place(relx=0.148, rely=0.95, relheight=0.043

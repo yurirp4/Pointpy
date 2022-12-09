@@ -5,15 +5,15 @@
         "Clientes": [
             {
                 "Pedido": 23,
-                "Nome": "yuri filipe",
+                "Nome": "yuri ribeiro",
                 "Email": "yuridasilvaribeiro2014@gmail.com",
-                "Endereco": "84757192 - 2954",
-                "Telefone": "Rua bla bla bla",
-                "Total": "R$79,30",
-                "Forma_de_pagamento:": "Cart\u00e3o de Debito",
+                "Endereco": "84757192 - 166",
+                "Telefone": "rua alto santa luzia",
+                "Total": "R$59,70",
+                "Forma_de_pagamento:": "Dinheiro",
+                "Feito em": "09/12/2022 - 18:49:01",
                 "pratos": [
-                    "(2) - Pizza",
-                    "(3) - cocacola2"
+                    "(3) - Beirute"
                 ]
             }
         ]
