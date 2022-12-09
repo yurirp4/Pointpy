@@ -1,9 +1,21 @@
 {
     "Pointpy": {
-        "Pedidos": 22,
+        "Pedidos": 23,
         "Telefone": "(00) 0-0000-0000",
         "Clientes": [
-
+            {
+                "Pedido": 23,
+                "Nome": "yuri filipe",
+                "Email": "yuridasilvaribeiro2014@gmail.com",
+                "Endereco": "84757192 - 2954",
+                "Telefone": "Rua bla bla bla",
+                "Total": "R$79,30",
+                "Forma_de_pagamento:": "Cart\u00e3o de Debito",
+                "pratos": [
+                    "(2) - Pizza",
+                    "(3) - cocacola2"
+                ]
+            }
         ]
     }
 }
