@@ -4,19 +4,13 @@ from tkinter import *
 import datetime as dt
 import json
 
-lista_pratos = ["(1) - Pizza [R$26,90]","(2) - Beirute[R$19,90]","(3) - X-tudo[R$5,50]","(4) - Batata-Frita[R$3,00]","(5) - Coca-Cola 2 Litros[R$8,50]","(6) - Coca-Cola 1 Litro[R$5,25]"]
-lista_precos = [26.90,19.90,5.50,3.0,8.50,5.25]
-formas_pagamento = ['Cartão de Debito',"Cartão de Crédito","Dinheiro","PIX"]
 
-def checar_parametros(txt):
-    if txt == None:
-        return
 
 class clientes:
     def __init__(self, top=None):
         try:
             self.db = open('clientes.json', 'r')
-            self.db.load = json.load(self.db)
+            self.db_load = json.load(self.db)
         except:
             self.db = open('clientes.json', 'w')
             formart = {"Pointpy": {'Pedidos': 1, 'Telefone': '(00)0-0000-0000', 'Clientes': []}}
@@ -27,6 +21,11 @@ class clientes:
         self.telefone = ''
         self.nome = ''
         self.pagamento = ''
+        self.lista_pratos = ["(1) - Pizza [R$26,90]", "(2) - Beirute[R$19,90]", "(3) - X-tudo[R$5,50]",
+                        "(4) - Batata-Frita[R$3,00]", "(5) - Coca-Cola 2 Litros[R$8,50]",
+                        "(6) - Coca-Cola 1 Litro[R$5,25]"]
+        self.lista_precos = [26.90, 19.90, 5.50, 3.0, 8.50, 5.25]
+        self.formas_pagamento = ['Cartão de Debito', "Cartão de Crédito", "Dinheiro", "PIX"]
         top.geometry("368x441+383+106")
         top.minsize(120, 1)
         top.maxsize(1370, 749)
@@ -236,13 +235,13 @@ class clientes:
         self.Message7.configure(text='''Pratos:''')
         self.Message7.configure(width=57)
 
-        self.TCombobox1 = ttk.Combobox(self.top,values=lista_pratos)
+        self.TCombobox1 = ttk.Combobox(self.top,values=self.lista_pratos)
         self.TCombobox1.place(relx=0.226, rely=0.621, relheight=0.048 ,relwidth=0.560)
         self.combobox.set('Selecione')
         self.TCombobox1.configure(textvariable=self.combobox)
         self.TCombobox1.configure(takefocus="tt")
 
-        self.TCombobox2 = ttk.Combobox(self.top, values=formas_pagamento)
+        self.TCombobox2 = ttk.Combobox(self.top, values=self.formas_pagamento)
         self.TCombobox2.place(relx=0.306, rely=0.521, relheight=0.048
                               , relwidth=0.389)
         self.combobox2.set('Selecione')
@@ -366,7 +365,7 @@ class clientes:
         n = self.combobox.get()
         size = self.listbox.size()
         items = self.listbox.get(0, size)
-        if not n in lista_pratos:
+        if not n in self.lista_pratos:
             return
 
 
@@ -374,22 +373,22 @@ class clientes:
         elif self.comanda_ativa == True:
             for i in reversed(range(size)):
                 self.listbox.delete(i)
-            if n == lista_pratos[0]:
+            if n == self.lista_pratos[0]:
                 self.caches_produtos[f'Pizza'] += 1
                 self.total += 26.90
-            elif n == lista_pratos[1]:
+            elif n == self.lista_pratos[1]:
                 self.caches_produtos[f'Beirute'] += 1
                 self.total += 19.90
-            elif n == lista_pratos[2]:
+            elif n == self.lista_pratos[2]:
                 self.caches_produtos['X-tudo'] += 1
                 self.total += 5.50
-            elif n == lista_pratos[3]:
+            elif n == self.lista_pratos[3]:
                 self.caches_produtos[f'Batata-Frita'] += 1
                 self.total +=  3.0
-            elif n == lista_pratos[4]:
+            elif n == self.lista_pratos[4]:
                 self.caches_produtos[f'cocacola2'] += 1
                 self.total += 8.50
-            elif n == lista_pratos[5]:
+            elif n == self.lista_pratos[5]:
                 self.caches_produtos[f'cocacola1'] += 1
                 self.total += 5.50
             for i in self.caches_produtos.keys():
@@ -405,22 +404,22 @@ class clientes:
         else:
             for i in reversed(range(size)):
                 self.listbox.delete(i)
-            if n == lista_pratos[0]:
+            if n == self.lista_pratos[0]:
                 self.caches_produtos[f'Pizza'] += 1
                 self.total += 26.90
-            elif n == lista_pratos[1]:
+            elif n == self.lista_pratos[1]:
                 self.caches_produtos[f'Beirute'] += 1
                 self.total += 19.90
-            elif n == lista_pratos[2]:
+            elif n == self.lista_pratos[2]:
                 self.caches_produtos['X-tudo'] += 1
                 self.total += 5.50
-            elif n == lista_pratos[3]:
+            elif n == self.lista_pratos[3]:
                 self.caches_produtos[f'Batata-Frita'] += 1
                 self.total += 3.0
-            elif n == lista_pratos[4]:
+            elif n == self.lista_pratos[4]:
                 self.caches_produtos[f'cocacola2'] += 1
                 self.total += 8.50
-            elif n == lista_pratos[5]:
+            elif n == self.lista_pratos[5]:
                 self.caches_produtos[f'cocacola1'] += 1
                 self.total += 5.50
             for i in self.caches_produtos.keys():
@@ -509,30 +508,31 @@ class clientes:
             return
         if self.Entry4.get() in listnummsg:
             return
-        with open("clientes.json", encoding='utf-8') as file:
-            data = json.load(file)
-            formart = {'Pedido': data['Pointpy']['Pedidos']+1, "Nome": f"{self.Entry1.get()} {self.Entry2.get()}", "Email": f"{self.Entry3.get()}",
-                       "Endereco": f'{self.Entry4.get()} - {self.Entry6.get()}',
-                       "Telefone": f"{self.Entry5.get()}", 'Total': f'R${self.total:.2f}'.replace('.', ','),'Forma_de_pagamento:': f'{self.combobox2.get()}',
-                       'pratos': []}
+        data = self.db_load
+        formart = {'Pedido': data['Pointpy']['Pedidos'] + 1, "Nome": f"{self.Entry1.get()} {self.Entry2.get()}",
+                   "Email": f"{self.Entry3.get()}",
+                   "Endereco": f'{self.Entry4.get()} - {self.Entry6.get()}',
+                   "Telefone": f"{self.Entry5.get()}", 'Total': f'R${self.total:.2f}'.replace('.', ','),
+                   'Forma_de_pagamento:': f'{self.combobox2.get()}',
+                   'pratos': []}
 
-            data['Pointpy']['Clientes'].append(formart)
-            json.dump(data, open("clientes.json", "w",encoding='utf-8'), indent=4)
-            templist = []
-            for i in self.caches_produtos.keys():
-                quantidade = self.caches_produtos[i]
-                if quantidade >= 1:
-                    templist.append(f'({quantidade}) - {i}')
-                    print(f"\nNovo pedido\nNumero do pedido: {data['Pointpy']['Pedidos']}\nCliente: {self.Entry1.get()} {self.Entry2.get()}\nEndereço: {self.Entry5.get()} - {self.Entry6.get()}\nTelefone: {self.Entry4.get()} // Email: {self.Entry3.get()}\nForma de pagamento: {self.pagamento}\nPratos solicitados: {templist}")
+        data['Pointpy']['Clientes'].append(formart)
+        json.dump(data, open("clientes.json", "w", encoding='utf-8'), indent=4)
+        templist = []
+        for i in self.caches_produtos.keys():
+            quantidade = self.caches_produtos[i]
+            if quantidade >= 1:
+                templist.append(f'({quantidade}) - {i}')
+                print(
+                    f"\nNovo pedido\nNumero do pedido: {data['Pointpy']['Pedidos']}\nCliente: {self.Entry1.get()} {self.Entry2.get()}\nEndereço: {self.Entry5.get()} - {self.Entry6.get()}\nTelefone: {self.Entry4.get()} // Email: {self.Entry3.get()}\nForma de pagamento: {self.pagamento}\nPratos solicitados: {templist}")
 
-
-            for g in data['Pointpy']['Clientes']:
-                if data['Pointpy']['Pedidos']+1 == g['Pedido']:
-                    self.nome = g['Nome']
-                    g['pratos']= templist
-                    data['Pointpy']['Pedidos'] += 1
-                    json.dump(data, open("clientes.json", "w"), indent=4)
-        dados = json.load(open("clientes.json"))
+        for g in data['Pointpy']['Clientes']:
+            if data['Pointpy']['Pedidos'] + 1 == g['Pedido']:
+                self.nome = g['Nome']
+                g['pratos'] = templist
+                data['Pointpy']['Pedidos'] += 1
+                json.dump(data, open("clientes.json", "w"), indent=4)
+        #dados = json.load(open("clientes.json"))
 
         #nova janela
         self.Entry1.destroy()
@@ -646,7 +646,7 @@ class clientes:
         self.Message6.configure(highlightcolor="black")
         self.Message6.configure(padx="1")
         self.Message6.configure(pady="1")
-        self.Message6.configure(text=f"SAC: {dados['Pointpy']['Telefone']}")
+        self.Message6.configure(text=f"SAC: {data['Pointpy']['Telefone']}")
         self.Message6.configure(width=230)
 
         self.Message7 = tk.Message(self.top)
